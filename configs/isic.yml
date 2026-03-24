@@ -3,7 +3,7 @@ data:
     seed: 2000
     label_min_max: [0.001, 0.999]
     num_classes: 3 # melanoma, seborrheic_keratosis, nevus
-    num_workers: 2
+    num_workers: 4
     # Kaggle ISIC 2017 paths (update base_dir for your Kaggle notebook)
     base_dir: "/kaggle/input/datasets/johnchfr/isic-2017"
     train_image_dir: "/kaggle/input/datasets/johnchfr/isic-2017/ISIC-2017_Training_Data/ISIC-2017_Training_Data"
