@@ -371,46 +371,46 @@ def main():
     output_dir = 'logs'
     version_name = 'DiffMCG'
 
-    # ================================================================
-    # Stage 1: Pretrain MCG Module
-    # ================================================================
-    print("=" * 60)
-    print("Stage 1: Pretraining MCG Module")
-    print("=" * 60)
+    # # ================================================================
+    # # Stage 1: Pretrain MCG Module
+    # # ================================================================
+    # print("=" * 60)
+    # print("Stage 1: Pretraining MCG Module")
+    # print("=" * 60)
 
-    mcg_logger = TensorBoardLogger(
-        name='diffmcg_mcg_pretrain', save_dir=output_dir
-    )
+    # mcg_logger = TensorBoardLogger(
+    #     name='diffmcg_mcg_pretrain', save_dir=output_dir
+    # )
 
-    mcg_model = MCGPretrainer(config)
+    # mcg_model = MCGPretrainer(config)
 
-    mcg_checkpoint = ModelCheckpoint(
-        monitor='mcg_f1',
-        filename='mcg-epoch{epoch:02d}-f1-{mcg_f1:.4f}',
-        auto_insert_metric_name=False,
-        every_n_epochs=1,
-        save_top_k=1,
-        mode="max",
-        save_last=True,
-    )
-    mcg_lr_monitor = LearningRateMonitor(logging_interval='step')
+    # mcg_checkpoint = ModelCheckpoint(
+    #     monitor='mcg_f1',
+    #     filename='mcg-epoch{epoch:02d}-f1-{mcg_f1:.4f}',
+    #     auto_insert_metric_name=False,
+    #     every_n_epochs=1,
+    #     save_top_k=1,
+    #     mode="max",
+    #     save_last=True,
+    # )
+    # mcg_lr_monitor = LearningRateMonitor(logging_interval='step')
 
-    mcg_trainer = pl.Trainer(
-        check_val_every_n_epoch=5,
-        max_epochs=config.mcg.pretrain_epochs,
-        accelerator='gpu' if torch.cuda.is_available() else 'cpu',
-        devices=1,
-        precision=32,
-        logger=mcg_logger,
-        strategy="auto",
-        enable_progress_bar=False,
-        log_every_n_steps=5,
-        callbacks=[mcg_checkpoint, mcg_lr_monitor],
-    )
+    # mcg_trainer = pl.Trainer(
+    #     check_val_every_n_epoch=5,
+    #     max_epochs=config.mcg.pretrain_epochs,
+    #     accelerator='gpu' if torch.cuda.is_available() else 'cpu',
+    #     devices=1,
+    #     precision=32,
+    #     logger=mcg_logger,
+    #     strategy="auto",
+    #     enable_progress_bar=False,
+    #     log_every_n_steps=5,
+    #     callbacks=[mcg_checkpoint, mcg_lr_monitor],
+    # )
 
-    mcg_trainer.fit(mcg_model)
-    mcg_best_ckpt = mcg_checkpoint.best_model_path
-    print(f"MCG pretraining complete. Best checkpoint: {mcg_best_ckpt}")
+    # mcg_trainer.fit(mcg_model)
+    # mcg_best_ckpt = mcg_checkpoint.best_model_path
+    # print(f"MCG pretraining complete. Best checkpoint: {mcg_best_ckpt}")
 
     # ================================================================
     # Stage 2: End-to-End Training
@@ -423,7 +423,7 @@ def main():
         name='diffmcg_e2e', save_dir=output_dir
     )
 
-    e2e_model = DiffMCGTrainer(config, pretrained_mcg_ckpt=mcg_best_ckpt)
+    e2e_model = DiffMCGTrainer(config, pretrained_mcg_ckpt=r'/kaggle/input/models/sajidalam9/mcg-pretrained-weights/pytorch/default/1/mcg-epoch49-f1-0.7979.ckpt')
 
     e2e_checkpoint = ModelCheckpoint(
         monitor='f1',
