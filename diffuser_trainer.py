@@ -386,17 +386,18 @@ def main():
     mcg_lr_monitor = LearningRateMonitor(logging_interval='step')
 
     mcg_trainer = pl.Trainer(
-        check_val_every_n_epoch=5,
-        max_epochs=config.mcg.pretrain_epochs,
-        accelerator='gpu' if torch.cuda.is_available() else 'cpu',
-        devices=1,
-        precision=32,
-        logger=mcg_logger,
-        strategy="auto",
-        enable_progress_bar=True,
-        log_every_n_steps=5,
-        callbacks=[mcg_checkpoint, mcg_lr_monitor],
-    )
+    check_val_every_n_epoch=5,
+    max_epochs=config.mcg.pretrain_epochs,
+    accelerator='gpu' if torch.cuda.is_available() else 'cpu',
+    devices=2,
+    strategy="ddp",
+    precision=16,
+    logger=mcg_logger,
+    enable_progress_bar=False,
+    log_every_n_steps=5,
+    callbacks=[mcg_checkpoint, mcg_lr_monitor],
+)
+
 
     mcg_trainer.fit(mcg_model)
     mcg_best_ckpt = mcg_checkpoint.best_model_path
