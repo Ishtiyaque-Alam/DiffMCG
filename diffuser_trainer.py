@@ -96,6 +96,11 @@ class MCGPretrainer(pl.LightningModule):
         self.log("mcg_loss_mask", loss_mask)
         return {"loss": loss}
 
+    def on_train_epoch_end(self):
+        loss = self.trainer.callback_metrics.get("mcg_train_loss")
+        loss_val = f"{loss.item():.4f}" if loss is not None else "N/A"
+        print(f"MCG Pretrain - Epoch {self.current_epoch} - Train Loss: {loss_val}")
+
     def on_validation_epoch_end(self):
         if len(self.gts) == 0:
             return
@@ -283,6 +288,11 @@ class DiffMCGTrainer(pl.LightningModule):
         self.log("loss_mmd", loss_mmd)
 
         return {"loss": loss}
+
+    def on_train_epoch_end(self):
+        loss = self.trainer.callback_metrics.get("train_loss")
+        loss_val = f"{loss.item():.4f}" if loss is not None else "N/A"
+        print(f"DiffMCG - Epoch {self.current_epoch} - Train Loss: {loss_val}")
 
     def on_validation_epoch_end(self):
         if len(self.gts) == 0:
