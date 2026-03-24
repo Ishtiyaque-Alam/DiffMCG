@@ -165,7 +165,7 @@ class DiffMCGTrainer(pl.LightningModule):
         self.lambda_mmd = self.params.training.lambda_mmd
 
         # Load scheduler config
-        config_path = r'option/diff_DDIM.yaml'
+        config_path = r'/kaggle/working/DiffMCG/option/diff_DDIM.yaml'
         with open(config_path, 'r') as f:
             diff_params = yaml.safe_load(f)
         self.diff_opt = EasyDict(diff_params)
@@ -353,7 +353,7 @@ def main():
         torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.benchmark = True
 
-    config_path = r'configs/isic.yml'
+    config_path = r'/kaggle/working/DiffMCG/configs/isic.yml'
     with open(config_path, 'r') as f:
         params = yaml.safe_load(f)
     config = EasyDict(params)
