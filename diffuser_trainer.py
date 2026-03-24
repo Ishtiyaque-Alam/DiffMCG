@@ -201,7 +201,7 @@ class DiffMCGTrainer(pl.LightningModule):
     def _load_mcg_weights(self, ckpt_path):
         """Load pretrained MCG weights from Stage 1."""
         print(f"Loading pretrained MCG weights from {ckpt_path}")
-        checkpoint = torch.load(ckpt_path, map_location='cpu')
+        checkpoint = torch.load(ckpt_path, map_location='cpu', weights_only=False)
 
         if 'state_dict' in checkpoint:
             state_dict = checkpoint['state_dict']
