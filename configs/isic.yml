@@ -1,0 +1,71 @@
+data:
+    dataset: "ISIC2017"
+    seed: 2000
+    label_min_max: [0.001, 0.999]
+    num_classes: 3 # melanoma, seborrheic_keratosis, nevus
+    num_workers: 2
+    # Kaggle ISIC 2017 paths (update base_dir for your Kaggle notebook)
+    base_dir: "/kaggle/input/datasets/johnchfr/isic-2017"
+    train_image_dir: "/kaggle/input/datasets/johnchfr/isic-2017/ISIC-2017_Training_Data/ISIC-2017_Training_Data"
+    train_mask_dir: "/kaggle/input/datasets/johnchfr/isic-2017/ISIC-2017_Training_Part1_GroundTruth/ISIC-2017_Training_Part1_GroundTruth"
+    train_label_csv: "/kaggle/input/datasets/johnchfr/isic-2017/ISIC-2017_Training_Part3_GroundTruth.csv"
+    val_image_dir: "/kaggle/input/datasets/johnchfr/isic-2017/ISIC-2017_Validation_Data/ISIC-2017_Validation_Data"
+    val_mask_dir: "/kaggle/input/datasets/johnchfr/isic-2017/ISIC-2017_Validation_Part1_GroundTruth/ISIC-2017_Validation_Part1_GroundTruth"
+    val_label_csv: "/kaggle/input/datasets/johnchfr/isic-2017/ISIC-2017_Validation_Part3_GroundTruth.csv"
+    test_image_dir: "/kaggle/input/datasets/johnchfr/isic-2017/ISIC-2017_Test_v2_Data/ISIC-2017_Test_v2_Data"
+    test_mask_dir: "/kaggle/input/datasets/johnchfr/isic-2017/ISIC-2017_Test_v2_Part1_GroundTruth/ISIC-2017_Test_v2_Part1_GroundTruth"
+    test_label_csv: "/kaggle/input/datasets/johnchfr/isic-2017/ISIC-2017_Test_v2_Part3_GroundTruth.csv"
+
+model:
+    type: "simple"
+    arch: resnet50
+    feature_dim: 128
+    hidden_dim: 256
+
+diffusion:
+    beta_schedule: linear
+    beta_start: 0.0001
+    beta_end: 0.02
+    timesteps: 1000
+    test_timesteps: 100
+    include_guidance: True
+
+mcg:
+    pretrain_epochs: 50
+    pretrain_lr: 0.0002
+    fusion_type: "concat"
+
+training:
+    batch_size: 8 # Reduced for RTX 3050 Ti / Kaggle GPU
+    n_epochs: 200
+    lambda_mmd: 1.0
+    warmup_epochs: 10
+    snapshot_freq: 1000000000
+    logging_freq: 100
+    validation_freq: 5
+    image_folder: "training_image_samples"
+
+sampling:
+    batch_size: 8
+    last_only: True
+
+testing:
+    batch_size: 8
+    last_only: True
+
+optim:
+    weight_decay: 0.000
+    optimizer: "Adam"
+    lr: 0.001
+    beta1: 0.9
+    amsgrad: False
+    eps: 0.00000001
+    grad_clip: 1.0
+
+mcg_optim:
+    weight_decay: 0.000
+    optimizer: "Adam"
+    lr: 0.0002
+    beta1: 0.9
+    amsgrad: False
+    eps: 0.00000001
